@@ -1,0 +1,104 @@
+---
+title: 'Problem Set 6  #1'
+author: "Group 1"
+date: "November 22, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(scipen=999)
+```
+
+## 1.1
+```{r 1.1.setup}
+houseprice = read.table("hprice1.raw")
+names(houseprice) = c("price","assess","bdrms","lotsize","sqrft","colonial","lprice","lassess","llotsize","lsqrft")
+model = lm(price~sqrft+bdrms, data=houseprice)
+model
+```
+
+
+#a.)
+```{r 1.1.a}
+head(houseprice)
+summary(houseprice)
+summary(subset(houseprice, select=c("price","sqrft","bdrms")))
+```
+
+
+#b.)
+```{r 1.1.b}
+```
+
+
+#c.)
+```{r 1.1.c}
+marg.inc.bdrm = model$coef[3]
+```
+Ceteris paribus, we expect house price to raise $`r round(marg.inc.bdrm*1000,2)` for every additional bedroom.
+
+
+#d.)
+```{r 1.1.d}
+marg.inc.bdrm140 = model$coef[3] + 140*model$coef[2]
+```
+Ceteris paribus, we expect house price to raise $`r round(marg.inc.bdrm140*1000,2)` for an additional 140 sqft bedroom.
+
+
+#e.)
+```{r 1.1.e}
+summary(model)
+```
+By the adjusted R^2, `r round(summary(model)$adj.r.squared*100,2)`% of variation in price is explained by sq footage and number of bedrooms.
+
+
+#f.)
+```{r 1.1.f}
+yhats = predict(model)
+```
+The predicted selling price for the first house is $`r round(yhats[1]*1000,2)`.
+
+
+#g.)
+```{r 1.1.g}
+resids = houseprice$price-yhats
+#Ordinally, I would use model$residuals, but we are told to "calculate" it.
+```
+The residual for the first house using this model is `r resids[1]`. Therefore, the buyer underpaid for the house by $`r abs(round(resids[1]*1000,2))`.
+
+
+#h.)
+```{r 1.1.h}
+```
+
+
+
+## 1.2
+#a.)
+```{r 1.2.setup}
+subs401k = read.table("401ksubs.raw")
+names(subs401k) = c("e401k","inc","marr","male","age","fsize","nettfa","p401k","pira","incsq","agesq")
+head(subs401k)
+```
+
+
+```{r 1.2.a}
+clean.subs401k = subset(subs401k, fsize==1)
+sing.per.house = nrow(clean.subs401k)
+```
+There are `r sing.per.house` single-person households in the data set.
+
+
+```{r 1.2.b}
+initial.model = lm(nettfa~inc+age, data=clean.subs401k)
+initial.model
+```
+Ceteris paribus, we expect net total financial assets to increase \$`r round(initial.model$coef[2]*1000,2)` for every $1000 increase in annual income.
+
+Ceteris paribus, we expect net total financial assets to increase \$`r round(initial.model$coef[3]*1000,2)` for every additional year older the respondent is.
+
+
+```{r 1.2.c}
+summary(initial.model)
+```
