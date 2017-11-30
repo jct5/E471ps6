@@ -29,8 +29,47 @@ summary(subset(houseprice, select=c("price","sqrft","bdrms")))
 
 #b.)
 ```{r 1.1.b}
+Y = houseprice$price
+X = cbind(rep(1,nrow(houseprice)),houseprice$sqrft,houseprice$bdrms)
 ```
 
+
+The matrix notation is Y = XB + e, where the first five rows look like
+
+$$\left(\begin{array}
+{rrr}
+300 \\
+370 \\
+191 \\
+195 \\
+373 \\
+....
+\end{array}\right)
+\ = \left(\begin{array}
+{rrr}
+1 & 2438 &  4\\
+1 & 2078 &  3\\
+1 & 1374 &  3\\
+1 & 1448 &  3\\
+1 & 2514 &  4\\
+...& ..... & ...
+\end{array}\right)
+\left(\begin{array}
+{rrr}
+Beta0 \\
+Beta1 \\
+Beta2 \\
+\end{array}\right)
+\ + \left(\begin{array}
+{rrr}
+epsilon1 \\
+epsilon2 \\
+epsilon3 \\
+epsilon4 \\
+epsilon5 \\
+........
+\end{array}\right)
+$$
 
 #c.)
 ```{r 1.1.c}
