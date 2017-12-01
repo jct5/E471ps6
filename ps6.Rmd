@@ -129,6 +129,7 @@ sing.per.house = nrow(clean.subs401k)
 There are `r sing.per.house` single-person households in the data set.
 
 
+#b.)
 ```{r 1.2.b}
 initial.model = lm(nettfa~inc+age, data=clean.subs401k)
 initial.model
@@ -137,7 +138,20 @@ Ceteris paribus, we expect net total financial assets to increase \$`r round(ini
 
 Ceteris paribus, we expect net total financial assets to increase \$`r round(initial.model$coef[3]*1000,2)` for every additional year older the respondent is.
 
+There are not any major surprises in the slope coefficients. The marginal effect of age is higher than income, which may be unexpected. We also see that the estimate for Beta0 is `r initial.model$coef[1]`, which is negative, muddying the interpretation. After all, we do not truly expect to buy a house with 0 sqft and 0 bedrooms, nor do we expect to be paid for buying such a house.
 
+
+#c.)
 ```{r 1.2.c}
 summary(initial.model)
+X401k = as.matrix(data.frame(rep(1,nrow(clean.subs401k)), clean.subs401k$inc, clean.subs401k$age))
+
+sigma.hat.sq = t(residuals(initial.model))%*%residuals(initial.model)/(nrow(clean.subs401k)-3)
+t = (initial.model$coef[3]-1)/((sigma.hat.sq)*t(c(0,0,1))%*%solve(t(X401k)%*%X401k)%*%c(0,0,1))^.5
+t
+p = pt(t, nrow(clean.subs401k)-3)
 ```
+
+With a p-value of `r p` At a significance level of .01, we fail to reject the null hypothesis that Beta2 = 1.
+
+
